@@ -12,22 +12,22 @@
 + <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">编程语言：Python 3.12</font>
 + <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">图形框架：Taichi 1.6.0（GPU 后端）</font>
 + <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">开发环境：VS Code + PowerShell</font>
-+ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">硬件依赖：支持 CUDA 的 GPU（确保</font>`<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">ti.gpu</font>`<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">架构正常调用）</font>
++ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">硬件依赖：支持 CUDA 的 GPU</font>
 
 ## <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">二、实验原理</font>
 ### <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">2.1 贝塞尔曲线与 De Casteljau 算法</font>
 <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">贝塞尔曲线由一组控制点定义，其形状由控制点的位置和数量决定。</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">De Casteljau 算法</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">是求解贝塞尔曲线点的核心方法，本质是</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">递归线性插值</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">：</font>
 
-1. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">给定参数 </font>$ t\in [0,1] $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，对相邻控制点</font>$ p_i,p_{i+1} $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);"> 做线性插值：</font>$ p_i'=(1-t)p_i+p_{i+1} $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，得到 </font>$ n-1 $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">个新点。</font>
-2. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对新点重复上述插值操作，直至仅剩 1 个点，该点即为</font>$ t $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对应曲线上的坐标。</font>
-3. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">实验中通过遍历 </font>$ p\in [0,1] $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">(</font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">采样 1000 个点），生成完整的贝塞尔曲线离散点集。</font>
+1. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">给定参数 </font> $t \in [0,1]$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，对相邻控制点</font> $p_i,p_{i+1}$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);"> 做线性插值：</font> $p_i'=(1-t)p_i+p_{i+1}$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，得到 </font> $n-1$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">个新点。</font>
+2. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对新点重复上述插值操作，直至仅剩 1 个点，该点即为</font> $t$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对应曲线上的坐标。</font>
+3. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">实验中通过遍历 </font> $p\in [0,1]$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">(</font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">采样 1000 个点），生成完整的贝塞尔曲线离散点集。</font>
 
 ### <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">2.2 光栅化与像素缓冲区</font>
 <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">屏幕本质是二维像素网格，光栅化的核心是</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">将归一化坐标映射为物理像素索引</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">：</font>
 
-1. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">初始化 </font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">800×800</font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);"> 的 GPU 向量缓冲区pixels，存储每个像素的 RGB 浮点值（范围</font>$ [0,1] $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">）。</font>
-2. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">归一化坐标  </font>$ [x,y]\in [0,1] $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">映射为像素索引：</font>$ x_{pixels}=int(x\times 80) $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，</font>$ y_{pixels}=int (y\times 800) $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">。</font>
-3. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对目标像素赋值绿色（</font>$ [0.0,1.0,0.0] $<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">），完成 “点亮像素” 操作。</font>
+1. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">初始化 </font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">800×800</font><font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);"> 的 GPU 向量缓冲区pixels，存储每个像素的 RGB 浮点值（范围</font> $[0,1]$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">）。</font>
+2. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">归一化坐标  </font> $[x,y]\in [0,1]$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">映射为像素索引：</font> $x_{pixels}=int(x\times 80)$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">，</font> $y_{pixels}=int (y\times 800)$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">。</font>
+3. <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">对目标像素赋值绿色（</font> $[0.0,1.0,0.0]$ <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">），完成 “点亮像素” 操作。</font>
 
 ### <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">2.3 高性能渲染优化</font>
 <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">现代图形学中，CPU 与 GPU 的 PCIe 通信是性能瓶颈，因此采用</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">批量处理 + 并行计算</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">策略：</font>
