@@ -1,4 +1,7 @@
 # <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">贝塞尔曲线绘制实验报告</font>
+
+学号：202411081021      姓名：陈诗邈   专业：计算机师范
+
 ## <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">一、实验概述</font>
 ### <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">1.1 实验目标</font>
 <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">本实验基于 Python+Taichi 图形编程框架，实现贝塞尔曲线（Bézier Curve）的交互式绘制与渲染。核心目标包括：</font>
